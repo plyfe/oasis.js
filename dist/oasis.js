@@ -3527,18 +3527,20 @@ define("oasis/iframe_adapter",
 
       initializeSandbox: function(sandbox) {
         var options = sandbox.options,
-            iframe = document.createElement('iframe'),
-            sandboxAttributes = ['allow-scripts'];
+            iframe = document.createElement('iframe');
 
-        if( sandbox.oasis.configuration.allowSameOrigin ) {
-          sandboxAttributes.push('allow-same-origin');
-        }
-        if( options && options.sandbox && options.sandbox.popups ) {
-          sandboxAttributes.push('allow-popups');
-        }
+        if(sandbox.oasis.configuration.sandboxed !== false) {
+          var sandboxAttributes = ['allow-scripts'];
 
+          if( sandbox.oasis.configuration.allowSameOrigin ) {
+            sandboxAttributes.push('allow-same-origin');
+          }
+          if( options && options.sandbox && options.sandbox.popups ) {
+            sandboxAttributes.push('allow-popups');
+          }
+          iframe.sandbox = sandboxAttributes.join(' ');
+        }
         iframe.name = sandbox.options.url + '?uuid=' + UUID.generate();
-        iframe.sandbox = sandboxAttributes.join(' ');
         iframe.seamless = true;
 
         // rendering-specific code
